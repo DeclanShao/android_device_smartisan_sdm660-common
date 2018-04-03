@@ -12,11 +12,12 @@ LOCAL_C_INCLUDES+= $(kernel_includes)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(common_deps)
 
 LOCAL_HEADER_LIBRARIES := generated_kernel_headers
+LOCAL_HEADER_LIBRARIES += libutils_headers
+LOCAL_HEADER_LIBRARIES += media_plugin_headers
 
 LIB2D_ROTATION=false
 
 LOCAL_C_INCLUDES += \
-    frameworks/native/include/media/openmax \
     $(LOCAL_PATH)/inc \
     $(LOCAL_PATH)/../common \
     $(LOCAL_PATH)/../mm-camera-interface/inc \
@@ -71,8 +72,7 @@ LOCAL_SRC_FILES := \
     src/mm_jpeg_mpo_composer.c
 
 LOCAL_MODULE           := libmmjpeg_interface
-LOCAL_PRELINK_MODULE   := false
-LOCAL_SHARED_LIBRARIES := libdl libcutils liblog libqomx_core libmmcamera_interface libutils
+LOCAL_SHARED_LIBRARIES := libdl libcutils liblog libqomx_core libmmcamera_interface
 ifeq ($(strip $(LIB2D_ROTATION)),true)
     LOCAL_SHARED_LIBRARIES += libmmlib2d_interface
 endif
