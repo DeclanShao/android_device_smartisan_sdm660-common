@@ -105,6 +105,12 @@ LOCAL_C_INCLUDES := \
         $(call project-path-for,qcom-media)/mm-core/inc \
         $(TARGET_OUT_HEADERS)/mm-camera-lib/cp/prebuilt
 
+ifneq (,$(filter $(TRINKET),$(TARGET_BOARD_PLATFORM)))
+LOCAL_C_INCLUDES += \
+        system/core/libion/kernel-headers \
+        system/core/libion/include
+endif
+
 #HAL 1.0 Include paths
 LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/HAL
@@ -137,6 +143,9 @@ LOCAL_SHARED_LIBRARIES := liblog libhardware libutils libcutils libdl libsync
 LOCAL_SHARED_LIBRARIES += libmmcamera_interface libmmjpeg_interface libui libcamera_metadata
 LOCAL_SHARED_LIBRARIES += libqdMetaData libqservice libbinder
 LOCAL_SHARED_LIBRARIES += libcutils libdl libdualcameraddm
+ifneq (,$(filter $(TRINKET),$(TARGET_BOARD_PLATFORM)))
+LOCAL_SHARED_LIBRARIES += libion
+endif
 ifeq ($(USE_DISPLAY_SERVICE),true)
 LOCAL_SHARED_LIBRARIES += android.frameworks.displayservice@1.0 libhidlbase
 else
