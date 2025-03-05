@@ -81,8 +81,7 @@ $(call inherit-product, $(LOCAL_PATH)/properties.mk)
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(LOCAL_PATH) \
-    hardware/smartisan
+    $(LOCAL_PATH)
 
 # Device uses high-density artwork where available
 PRODUCT_AAPT_CONFIG := normal
@@ -103,7 +102,7 @@ PRODUCT_CHARACTERISTICS := nosdcard
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio@4.0-impl.smartisan:32 \
+    android.hardware.audio@2.0-impl:32 \
     android.hardware.audio.effect@4.0-impl:32 \
     android.hardware.audio.service \
     android.hardware.soundtrigger@2.1-impl:32 \
