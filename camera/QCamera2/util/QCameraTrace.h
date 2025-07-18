@@ -20,9 +20,6 @@
 #ifndef __QCAMERATRACE_H__
 #define __QCAMERATRACE_H__
 
-#include <stdlib.h>
-#include <string.h>
-#include <pthread.h>
 #include <utils/Trace.h>
 #include "camscope_packet_type.h"
 

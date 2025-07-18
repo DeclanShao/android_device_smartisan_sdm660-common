@@ -52,7 +52,7 @@
 #define CEILING4(X)  (((X) + 0x0003) & 0xFFFC)
 #define CEILING2(X)  (((X) + 0x0001) & 0xFFFE)
 
-#define MAX_ZOOMS_CNT 62
+#define MAX_ZOOMS_CNT 91
 #define ZOOM_MIN 4096        // min zoom value: 1x
 #define ZOOM_MAX 4096 * 8 // max zoom value: 8x
 #define MAX_SIZES_CNT 40
@@ -149,7 +149,7 @@
 
 #define MAX_VIDEO_BUFFERS 30
 
-#define QCAMERA_DUMP_FRM_LOCATION "/data/vendor/qcam/"
+#define QCAMERA_DUMP_FRM_LOCATION "/data/misc/camera/"
 #define QCAMERA_MAX_FILEPATH_LENGTH 64
 
 #define LIKELY(x)       __builtin_expect((x), true)
@@ -1018,12 +1018,6 @@ typedef enum {
   SECURE
 } cam_stream_secure_t;
 
-typedef enum {
-  SECURE_INVALID,
-  SECURE_SLAVE,
-  SECURE_MASTER,
-} cam_stream_secure_mode_t;
-
 #define CAM_REPROCESS_MASK_TYPE_WNR (1<<0)
 
 /* event from server */
@@ -1661,7 +1655,6 @@ typedef struct {
     int32_t est_snap_iso_value;
     uint32_t est_snap_luma;
     uint32_t est_snap_target;
-    volatile char smartisan_reversed[4];
 } cam_3a_params_t;
 
 typedef struct {
@@ -2068,7 +2061,7 @@ typedef enum {
     CAM_INTF_PARM_ANTIBANDING,
     CAM_INTF_PARM_EXPOSURE_COMPENSATION,
     CAM_INTF_PARM_EV_STEP,
-    CAM_INTF_PARM_AEC_ROI,
+    CAM_INTF_PARM_AEC_LOCK,
     CAM_INTF_PARM_FPS_RANGE, /* 10 */
     CAM_INTF_PARM_AWB_LOCK,
     CAM_INTF_PARM_EFFECT,
@@ -2093,7 +2086,7 @@ typedef enum {
     CAM_INTF_PARM_MODE,             /* camera mode */
     CAM_INTF_PARM_AEC_ALGO_TYPE, /* 30 */ /* auto exposure algorithm */
     CAM_INTF_PARM_FOCUS_ALGO_TYPE,  /* focus algorithm */
-    CAM_INTF_PARM_AEC_LOCK,
+    CAM_INTF_PARM_AEC_ROI,
     CAM_INTF_PARM_AF_ROI,
     CAM_INTF_PARM_SCE_FACTOR,
     CAM_INTF_PARM_FD,
@@ -2422,8 +2415,6 @@ typedef enum {
     CAM_INTF_META_TOUCH_AE_RESULT,
     /* Param for updating initial exposure index value*/
     CAM_INTF_PARM_INITIAL_EXPOSURE_INDEX,
-    SMARTISAN_02,
-    SMARTISAN_01,
     /* Gain applied post raw captrue.
        ISP digital gain */
     CAM_INTF_META_ISP_SENSITIVITY,
@@ -2450,8 +2441,6 @@ typedef enum {
     CAM_INTF_META_AWB_CONVERGENCE_SPEED,
     /*Focus value output from af core*/
     CAM_INTF_META_FOCUS_VALUE,
-    SMARTISAN_03,
-    SMARTISAN_04,
     /*Spot light detection result output from af core*/
     CAM_INTF_META_SPOT_LIGHT_DETECT,
     /* HAL based HDR*/

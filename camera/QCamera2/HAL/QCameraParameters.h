@@ -24,11 +24,11 @@
 #include <cutils/properties.h>
 
 // System dependencies
-#include <CameraParameters.h>
+#include <camera/CameraParameters.h>
 #include <utils/Errors.h>
 
 // Camera dependencies
-#include "hardware/camera.h"
+#include "camera.h"
 #include "QCameraMem.h"
 #include "QCameraParametersIntf.h"
 #include "QCameraThermalAdapter.h"
@@ -39,8 +39,6 @@ extern "C" {
 #include "mm_jpeg_interface.h"
 }
 
-using ::android::hardware::camera::common::V1_0::helper::CameraParameters;
-using ::android::hardware::camera::common::V1_0::helper::Size;
 using namespace android;
 
 namespace qcamera {
@@ -706,8 +704,7 @@ public:
     bool isZSLMode() {return m_bZslMode;};
     bool isRdiMode() {return m_bRdiMode;};
     bool isSecureMode() {return m_bSecureMode;};
-    cam_stream_secure_mode_t getSecureSessionType()const {return m_eSecSessMode;}
-    cam_stream_type_t getSecureStreamType()const {return mSecureStraemType;}
+    cam_stream_type_t getSecureStreamType() {return mSecureStraemType;};
     bool isNoDisplayMode(uint32_t cam_type = CAM_TYPE_MAIN);
     bool isWNREnabled() {return m_bWNROn;};
     bool isTNRSnapshotEnabled() {return m_bTNRSnapshotOn;};
@@ -1313,7 +1310,6 @@ private:
     bool m_bSensorHDREnabled;             // if HDR is enabled
     bool m_bRdiMode;                // if RDI mode
     bool m_bSecureMode;
-    cam_stream_secure_mode_t m_eSecSessMode;
     bool m_bSecureModeUBWC;
     bool m_bAeBracketingEnabled;
     int32_t mFlashValue;

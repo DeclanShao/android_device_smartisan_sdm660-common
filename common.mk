@@ -154,9 +154,6 @@ PRODUCT_PACKAGES += \
     bt-mac-generator
 
 # Camera
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/camera/camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/camera/camera_config.xml
-
 PRODUCT_PACKAGES += \
     camera.sdm660 \
     libshim_camera \

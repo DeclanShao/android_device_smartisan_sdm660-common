@@ -38,7 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "gralloc_priv.h"
-#include "cutils/native_handle.h"
+#include "native_handle.h"
 
 // Camera definitions
 #include "android/QCamera2External.h"
@@ -46,7 +46,6 @@
 #include "QCameraBufferMaps.h"
 #include "QCameraFlash.h"
 #include "QCameraTrace.h"
-#include "QCameraDisplay.h"
 
 extern "C" {
 #include "mm_camera_dbg.h"
@@ -1720,11 +1719,6 @@ QCamera2HardwareInterface::QCamera2HardwareInterface(uint32_t cameraId)
     mCameraDevice.ops = &mCameraOps;
     mCameraDevice.priv = this;
 
-#ifndef USE_DISPLAY_SERVICE
-    mCameraDisplay = new QCameraDisplay();
-#else
-    mCameraDisplay = QCameraDisplay::instance();
-#endif
     mDualCamera = is_dual_camera_by_idx(cameraId);
     pthread_condattr_t mCondAttr;
 
@@ -2058,6 +2052,7 @@ int QCamera2HardwareInterface::openCamera()
     memset(value, 0, sizeof(value));
     property_get("persist.camera.cache.optimize", value, "1");
     m_bOptimizeCacheOps = atoi(value);
+
     return NO_ERROR;
 
 error_exit3:
@@ -2528,24 +2523,6 @@ int QCamera2HardwareInterface::initCapabilities(uint32_t cameraId,
         memcpy(gCamCapability[cameraId]->main_cam_cap, gCamCapability[cameraId],
                 sizeof(cam_capability_t));
     }
-
-    if (gCamCapability[cameraId]->position == CAM_POSITION_FRONT) {
-        for (size_t i = 0; i < ARRAY_SIZE(camera1_picture_sizes_override); i++) {
-            gCamCapability[cameraId]->picture_sizes_tbl[i] = camera1_picture_sizes_override[i];
-        }
-        gCamCapability[cameraId]->picture_sizes_tbl_cnt = ARRAY_SIZE(camera1_picture_sizes_override);
-
-        for (size_t i = 0; i < ARRAY_SIZE(camera1_video_sizes_override); i++) {
-            gCamCapability[cameraId]->video_sizes_tbl[i] = camera1_video_sizes_override[i];
-        }
-        gCamCapability[cameraId]->video_sizes_tbl_cnt = ARRAY_SIZE(camera1_video_sizes_override);
-
-        for (size_t i = 0; i < ARRAY_SIZE(camera1_video_sizes_override); i++) {
-            gCamCapability[cameraId]->livesnapshot_sizes_tbl[i] = camera1_video_sizes_override[i];
-        }
-        gCamCapability[cameraId]->livesnapshot_sizes_tbl_cnt = ARRAY_SIZE(camera1_video_sizes_override);
-    }
-
 failed_op:
     cameraHandle->ops->close_camera(cameraHandle->camera_handle);
     cameraHandle = NULL;
@@ -3422,7 +3399,6 @@ int QCamera2HardwareInterface::initStreamInfoBuf(cam_stream_type_t stream_type,
     streamInfo->buf_cnt = streamInfo->num_bufs;
     streamInfo->streaming_mode = CAM_STREAMING_MODE_CONTINUOUS;
     streamInfo->is_secure = NON_SECURE;
-    streamInfo->secure_mode = SECURE_INVALID;
     streamInfo->bNoBundling = false;
 
     streamInfo->cam_type = (cam_sync_type_t)cam_type;
@@ -3525,7 +3501,6 @@ int QCamera2HardwareInterface::initStreamInfoBuf(cam_stream_type_t stream_type,
         }
         if (isSecureMode()) {
             streamInfo->is_secure = SECURE;
-            streamInfo->secure_mode = mParameters.getSecureSessionType();
         } else {
             streamInfo->is_secure = NON_SECURE;
         }
@@ -3976,12 +3951,6 @@ int QCamera2HardwareInterface::startPreview()
 
     m_perfLockMgr.acquirePerfLockIfExpired(PERF_LOCK_START_PREVIEW);
 
-#ifdef USE_DISPLAY_SERVICE
-    if(!mCameraDisplay->startVsync(TRUE)) {
-        LOGE("Error: Cannot start vsync (still continue)");
-    }
-#endif //USE_DISPLAY_SERVICE
-
     updateThermalLevel((void *)&mThermalLevel);
 
     setDisplayFrameSkip();
@@ -4103,9 +4072,6 @@ int QCamera2HardwareInterface::stopPreview()
     // delete all channels from preparePreview
     unpreparePreview();
     m_bFirstPreviewFrameReceived = false;
-#ifdef USE_DISPLAY_SERVICE
-    mCameraDisplay->startVsync(FALSE);
-#endif //Use_DISPLAY_SERVICE
 
     m_perfLockMgr.releasePerfLock(PERF_LOCK_STOP_PREVIEW);
     LOGI("X");
@@ -6675,7 +6641,6 @@ void QCamera2HardwareInterface::camEvtHandle(uint32_t /*camera_handle*/,
                         obj->mDefCond.broadcast();
                         LOGH("broadcast mDefCond signal\n");
                     }
-                    [[clang::fallthrough]];
                 default:
                     obj->processEvt(QCAMERA_SM_EVT_EVT_NOTIFY, payload);
                     break;
@@ -7328,7 +7293,6 @@ int32_t QCamera2HardwareInterface::processPrepSnapshotDoneEvent(
 int32_t QCamera2HardwareInterface::processASDUpdate(
         __unused cam_asd_decision_t asd_decision)
 {
-#ifndef VANILLA_HAL
     if ( msgTypeEnabled(CAMERA_MSG_META_DATA) ) {
         size_t data_len = sizeof(cam_auto_scene_t);
         size_t buffer_len = 1 *sizeof(int)       //meta type
@@ -7347,6 +7311,7 @@ int32_t QCamera2HardwareInterface::processASDUpdate(
             return UNKNOWN_ERROR;
         }
 
+#ifndef VANILLA_HAL
         pASDData[0] = CAMERA_META_DATA_ASD;
         pASDData[1] = (int)data_len;
         pASDData[2] = asd_decision.detected_scene;
@@ -7364,8 +7329,8 @@ int32_t QCamera2HardwareInterface::processASDUpdate(
             LOGE("fail sending notification");
             asdBuffer->release(asdBuffer);
         }
-    }
 #endif
+    }
     return NO_ERROR;
 }
 

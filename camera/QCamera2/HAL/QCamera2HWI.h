@@ -35,10 +35,11 @@
 #include <utils/Condition.h>
 
 // Camera dependencies
-#include "hardware/camera.h"
+#include "camera.h"
 #include "QCameraAllocator.h"
 #include "QCameraChannel.h"
 #include "QCameraCmdThread.h"
+#include "QCameraDisplay.h"
 #include "QCameraMem.h"
 #include "QCameraParameters.h"
 #include "QCameraParametersIntf.h"
@@ -201,9 +202,6 @@ private:
     QCameraCmdThread mProcTh;
     bool             mActive;
 };
-
-class QCameraDisplay;
-
 class QCamera2HardwareInterface : public QCameraAllocator,
         public QCameraThermalCallback, public QCameraAdjustFPS
 {
@@ -835,7 +833,7 @@ private:
     uint32_t mSurfaceStridePadding;
 
     //QCamera Display Object
-    QCameraDisplay* mCameraDisplay;
+    QCameraDisplay mCameraDisplay;
 
     bool m_bNeedRestart;
     Mutex mMapLock;

@@ -39,7 +39,6 @@
 
 // Camera dependencies
 #include "QCamera2HWI.h"
-#include "QCameraDisplay.h"
 #include "QCameraTrace.h"
 
 extern "C" {
@@ -761,7 +760,7 @@ void QCamera2HardwareInterface::synchronous_stream_cb_routine(
     frameTime = frameTime - pme->mBootToMonoTimestampOffset;
     // Calculate the future presentation time stamp for displaying frames at regular interval
     if (pme->getRecordingHintValue() == true) {
-        mPreviewTimestamp = pme->mCameraDisplay->computePresentationTimeStamp(frameTime);
+        mPreviewTimestamp = pme->mCameraDisplay.computePresentationTimeStamp(frameTime);
     }
     stream->mStreamTimestamp = frameTime;
 
@@ -1325,7 +1324,7 @@ void QCamera2HardwareInterface::secure_stream_cb_routine(
             else {
                 nsecs_t previewTimestamp = 0;
                 // Calculate the future presentation time stamp for displaying frames at regular interval
-                previewTimestamp = pme->mCameraDisplay->computePresentationTimeStamp(frameTime);
+                previewTimestamp = pme->mCameraDisplay.computePresentationTimeStamp(frameTime);
                 stream->mStreamTimestamp = frameTime;
 
                 err = memory->enqueueBuffer(eIdx, previewTimestamp);

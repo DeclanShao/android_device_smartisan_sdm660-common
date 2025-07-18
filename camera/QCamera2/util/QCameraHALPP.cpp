@@ -29,8 +29,6 @@
 
 #define LOG_TAG "QCameraHALPP"
 
-#include <sys/stat.h>
-#include <fcntl.h>
 // Camera dependencies
 #include "QCameraTrace.h"
 #include "QCameraHALPP.h"

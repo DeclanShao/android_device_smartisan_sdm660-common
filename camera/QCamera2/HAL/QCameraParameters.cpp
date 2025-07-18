@@ -40,13 +40,15 @@
 #define SYSINFO_H <SYSTEM_HEADER_PREFIX/sysinfo.h>
 #include SYSINFO_H
 #include "gralloc_priv.h"
-#include "system/graphics.h"
+#include "graphics.h"
 
 // Camera dependencies
 #include "QCameraBufferMaps.h"
 #include "QCamera2HWI.h"
 #include "QCameraParameters.h"
 #include "QCameraTrace.h"
+
+#include "dualcameraddm_wrapper.h"
 
 extern "C" {
 #include "mm_camera_dbg.h"
@@ -1002,7 +1004,6 @@ QCameraParameters::QCameraParameters()
       m_bSensorHDREnabled(false),
       m_bRdiMode(false),
       m_bSecureMode(false),
-      m_eSecSessMode(SECURE_INVALID),
       m_bSecureModeUBWC(true),
       m_bAeBracketingEnabled(false),
       mFlashValue(CAM_FLASH_MODE_OFF),
@@ -5113,14 +5114,6 @@ int32_t QCameraParameters::setSecureMode(const QCameraParameters& params)
         LOGD("Secure steam type is CAM_STREAM_TYPE_PREVIEW");
         mSecureStraemType = CAM_STREAM_TYPE_PREVIEW;
     }
-
-    if (isSecureMode())
-        if (QCameraCommon::is_target_SDM450())
-            m_eSecSessMode = SECURE_SLAVE;
-        else
-            m_eSecSessMode = SECURE_MASTER;
-    else
-        m_eSecSessMode = SECURE_INVALID;
 
     str = params.get(KEY_QC_SECURE_MODE_UBWC);
     prev_str = get(KEY_QC_SECURE_MODE_UBWC);
@@ -16906,8 +16899,7 @@ bool QCameraParameters::needAnalysisStream()
  *==========================================================================*/
 void QCameraParameters::getDepthMapSize(int &width, int &height)
 {
-     (void)width;
-     (void)height;
+    qrcp::getDepthMapSize(CAM_BOKEH_TELE_WIDTH, CAM_BOKEH_TELE_HEIGHT, width, height);
 }
 
 void QCameraParameters::setBokehSnaphot(bool enable)

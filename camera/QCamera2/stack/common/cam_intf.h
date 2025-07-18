@@ -677,8 +677,6 @@ typedef struct cam_capability{
 
     /*Mono Stats support*/
     uint8_t is_mono_stats_suport;
-
-    volatile char smartisan_reversed[2080];
 } cam_capability_t;
 
 typedef enum {
@@ -792,11 +790,8 @@ typedef struct cam_stream_info {
     /* Image Stabilization type */
     cam_is_type_t is_type;
 
-    /* Signifies whether stream is secure or not*/
+    /* Signifies Secure stream mode */
     cam_stream_secure_t is_secure;
-
-    /* signifies mode of secure session */
-    cam_stream_secure_mode_t secure_mode;
 
     /* Preferred Performance mode */
     cam_perf_mode_t perf_mode;
@@ -851,8 +846,8 @@ typedef struct cam_stream_info {
     ((NULL != TABLE_PTR) ? \
     ((TABLE_PTR->data.member_variable_##META_ID[ 0 ] = DATA), \
     (TABLE_PTR->is_valid[META_ID] = 1), (0)) : \
-    (({LOGE("Unable to set metadata TABLE_PTR:%p META_ID:%d", \
-            TABLE_PTR, META_ID)}), (-1))) \
+    ((LOGE("Unable to set metadata TABLE_PTR:%p META_ID:%d", \
+            TABLE_PTR, META_ID)), (-1))) \
 
 #define ADD_SET_PARAM_ENTRY_TO_BATCH_FOR_AUX(TABLE_PTR, AUX_TABLE_PTR, META_ID) \
     ((NULL != TABLE_PTR || (NULL != AUX_TABLE_PTR)) ? \
@@ -992,8 +987,6 @@ typedef struct {
     INCLUDE(CAM_INTF_META_LENS_FOCAL_LENGTH,            float,                       1);
     INCLUDE(CAM_INTF_META_LENS_FOCUS_DISTANCE,          float,                       1);
     INCLUDE(CAM_INTF_META_FOCUS_VALUE,                  float,                       1);
-    INCLUDE(SMARTISAN_03,                               uint64_t,                    1);
-    INCLUDE(SMARTISAN_04,                               uint32_t,                    1);
     INCLUDE(CAM_INTF_META_SPOT_LIGHT_DETECT,            uint8_t,                     1);
     INCLUDE(CAM_INTF_META_LENS_FOCUS_RANGE,             float,                       2);
     INCLUDE(CAM_INTF_META_LENS_STATE,                   cam_af_lens_state_t,         1);
@@ -1185,8 +1178,6 @@ typedef struct {
     INCLUDE(CAM_INTF_META_BINNING_CORRECTION_MODE,      cam_binning_correction_mode_t,  1);
 
     /* HAL1 and HAL3 Dual Camera */
-    INCLUDE(SMARTISAN_01,                               uint32_t,                    1);
-    INCLUDE(SMARTISAN_02,                               uint32_t,                    1);
     INCLUDE(CAM_INTF_META_OIS_READ_DATA,                cam_ois_data_t,              1);
     INCLUDE(CAM_INTF_PARAM_BOKEH_BLUR_LEVEL,            cam_rtb_blur_info_t,         1);
     INCLUDE(CAM_INTF_META_RTB_DATA,                     cam_rtb_msg_type_t,          1);
@@ -1270,52 +1261,6 @@ static inline void clear_metadata_buffer(metadata_buffer_t *meta)
       meta->tuning_params.tuning_mod1_stats_data_size = 0;
     }
 }
-
-#define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
-
-static cam_dimension_t camera1_picture_sizes_override[] = {
-    {4608, 3456},
-    {4608, 2592},
-    {3968, 2976},
-    {3968, 1984},
-    {3840, 2160},
-    {3264, 2448},
-    {3968, 2232},
-    {3456, 3456},
-    {3200, 2400},
-    {2944, 2944},
-    {2560, 2560},
-    {2592, 1944},
-    {2320, 1740},
-    {2688, 1512},
-    {2048, 1536},
-    {1920, 1080},
-    {1600, 1200},
-    {1440, 1080},
-    {1280, 960},
-    {1280, 720},
-    {1280, 480},
-    {1024, 768},
-    {800, 600},
-};
-
-static cam_dimension_t camera1_video_sizes_override[] = {
-    {4096, 2160},
-    {3968, 1984},
-    {3840, 2160},
-    {2592, 1944},
-    {2320, 1740},
-    {2688, 1512},
-    {2048, 1536},
-    {1920, 1080},
-    {1600, 1200},
-    {1440, 1080},
-    {1280, 960},
-    {1280, 720},
-    {1280, 480},
-    {1024, 768},
-    {800, 600},
-};
 
 #ifdef  __cplusplus
 }

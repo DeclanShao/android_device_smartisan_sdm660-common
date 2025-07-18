@@ -3988,7 +3988,7 @@ int32_t QCamera3HardwareInterface::orchestrateRequest(
         int32_t expCompensation = hdr_exp_values;
         uint8_t aeLock = 1;
         modified_meta.update(ANDROID_CONTROL_AE_EXPOSURE_COMPENSATION, &expCompensation, 1);
-        // modified_meta.update(ANDROID_CONTROL_AE_LOCK, &aeLock, 1);
+        modified_meta.update(ANDROID_CONTROL_AE_LOCK, &aeLock, 1);
         camera_metadata_t *modified_settings = modified_meta.release();
         request->settings = modified_settings;
 
@@ -4009,7 +4009,7 @@ int32_t QCamera3HardwareInterface::orchestrateRequest(
         expCompensation = hdr_exp_values;
         aeLock = 1;
         modified_meta.update(ANDROID_CONTROL_AE_EXPOSURE_COMPENSATION, &expCompensation, 1);
-        // modified_meta.update(ANDROID_CONTROL_AE_LOCK, &aeLock, 1);
+        modified_meta.update(ANDROID_CONTROL_AE_LOCK, &aeLock, 1);
         modified_settings = modified_meta.release();
         request->settings = modified_settings;
 
@@ -4047,7 +4047,7 @@ int32_t QCamera3HardwareInterface::orchestrateRequest(
         expCompensation = hdr_exp_values;
         aeLock = 1;
         modified_meta.update(ANDROID_CONTROL_AE_EXPOSURE_COMPENSATION, &expCompensation, 1);
-        // modified_meta.update(ANDROID_CONTROL_AE_LOCK, &aeLock, 1);
+        modified_meta.update(ANDROID_CONTROL_AE_LOCK, &aeLock, 1);
         modified_settings = modified_meta.release();
         request->settings = modified_settings;
 
@@ -8221,23 +8221,6 @@ int QCamera3HardwareInterface::initCapabilities(uint32_t cameraId)
         gCamCapability[cameraId]->active_array_size.height = raw_dim.height;
 
         LOGD("override active array size to (%d, %d).", raw_dim.width, raw_dim.height);
-    }
-
-    if (gCamCapability[cameraId]->position == CAM_POSITION_FRONT) {
-        for (size_t i = 0; i < ARRAY_SIZE(camera1_picture_sizes_override); i++) {
-            gCamCapability[cameraId]->picture_sizes_tbl[i] = camera1_picture_sizes_override[i];
-        }
-        gCamCapability[cameraId]->picture_sizes_tbl_cnt = ARRAY_SIZE(camera1_picture_sizes_override);
-
-        for (size_t i = 0; i < ARRAY_SIZE(camera1_video_sizes_override); i++) {
-            gCamCapability[cameraId]->video_sizes_tbl[i] = camera1_video_sizes_override[i];
-        }
-        gCamCapability[cameraId]->video_sizes_tbl_cnt = ARRAY_SIZE(camera1_video_sizes_override);
-
-        for (size_t i = 0; i < ARRAY_SIZE(camera1_video_sizes_override); i++) {
-            gCamCapability[cameraId]->livesnapshot_sizes_tbl[i] = camera1_video_sizes_override[i];
-        }
-        gCamCapability[cameraId]->livesnapshot_sizes_tbl_cnt = ARRAY_SIZE(camera1_video_sizes_override);
     }
 
 failed_op:
