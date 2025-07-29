@@ -120,7 +120,6 @@ QCOM_BT_USE_SMD_TTY := true
 
 # Camera
 BOARD_QTI_CAMERA_32BIT_ONLY := true
-TARGET_SUPPORT_HAL1 := false
 
 # Crypto
 TARGET_HW_DISK_ENCRYPTION := true
