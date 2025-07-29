@@ -66,6 +66,7 @@ TARGET_KERNEL_CONFIG := vendor/osborn_defconfig
 
 # HAX: SELinux Permissive - Remove ASAP
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+ALLOW_MISSING_DEPENDENCIES := true
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
