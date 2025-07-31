@@ -89,6 +89,7 @@ vendor/lib64/vendor.qti.hardware.bluetooth_sar@1.1.so|ece3dafc4447e8302109851c3a
 
 # Camera
 -vendor/lib/libdualcameraddm.so
+-lib/libmmcamera_interface.so:vendor/lib/libmmcamera_interface.so
 bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
 lib/libMMBeauty.so:vendor/lib/libMMBeauty.so
 lib/libSensorManagerHAL.so:vendor/lib/libSensorManagerHAL.so
